@@ -120,9 +120,9 @@ impl AppPackager for CustomPackager {
             cmd.env("CHANNEL", channel);
         }
 
-        let out = cmd.output().map_err(|e| {
-            PackageError::MissingTool(format!("{}: {}", shell, e))
-        })?;
+        let out = cmd
+            .output()
+            .map_err(|e| PackageError::MissingTool(format!("{}: {}", shell, e)))?;
         if !out.status.success() {
             return Err(PackageError::CommandFailed {
                 command: self.script.clone(),
@@ -183,8 +183,7 @@ mod tests {
             "echo \"$APP_NAME|$APP_VERSION|$BUILD_NAME|$BUILD_NUMBER|$BUILD_MODE|$FLAVOR|$CHANNEL\" > {} && touch \"$OUTPUT_ARTIFACT_PATH\"",
             capture.display()
         );
-        let packager =
-            CustomPackager::new(Platform::Linux, script, "tar.gz".to_string());
+        let packager = CustomPackager::new(Platform::Linux, script, "tar.gz".to_string());
 
         let config = PackageConfig {
             app_name: "demo".into(),
@@ -212,8 +211,7 @@ mod tests {
         );
 
         let captured = std::fs::read_to_string(&capture).unwrap();
-        let parts: HashMap<usize, &str> =
-            captured.trim().split('|').enumerate().collect();
+        let parts: HashMap<usize, &str> = captured.trim().split('|').enumerate().collect();
         assert_eq!(parts[&0], "demo");
         assert_eq!(parts[&1], "1.0.0+7");
         assert_eq!(parts[&2], "1.0.0");

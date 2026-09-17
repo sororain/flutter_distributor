@@ -494,7 +494,9 @@ spec_macros:
         assert!(spec.contains("Packager: Gamer Boy 69 <rickastley@gmail.lol>"));
         assert!(spec.contains("License: MIT"));
         assert!(spec.contains("Requires: libkeybinder"));
-        assert!(spec.contains("%post\nupdate-mime-database %{_datadir}/mime &> /dev/null || :\necho Installed"));
+        assert!(spec.contains(
+            "%post\nupdate-mime-database %{_datadir}/mime &> /dev/null || :\necho Installed"
+        ));
         assert!(spec.contains("echo Uninstalling"));
         assert!(spec.contains("%attr(4755, root, root)"));
     }
