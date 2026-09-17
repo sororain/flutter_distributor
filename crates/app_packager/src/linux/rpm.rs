@@ -155,6 +155,9 @@ impl RpmMakeConfig {
         let app_name = &config.app_name;
         let binary_name = &config.app_binary_name;
         let install_script = [
+            // rpm >= 4.20 runs %install inside %{_builddir}/%{name}-%{version}-build;
+            // the relative paths below expect %{_topdir}/BUILD.
+            "cd %{_topdir}/BUILD".to_string(),
             "mkdir -p %{buildroot}%{_bindir}".to_string(),
             "mkdir -p %{buildroot}%{_datadir}/%{name}".to_string(),
             "mkdir -p %{buildroot}%{_datadir}/applications".to_string(),

@@ -157,6 +157,9 @@ class MakeRPMConfig extends MakeLinuxPackageConfig {
         'body': {
           '%description': specDescription ?? pubspec.description,
           '%install': [
+            // rpm >= 4.20 runs %install inside %{_builddir}/%{name}-%{version}-build;
+            // the relative paths below expect %{_topdir}/BUILD.
+            'cd %{_topdir}/BUILD',
             'mkdir -p %{buildroot}%{_bindir}',
             'mkdir -p %{buildroot}%{_datadir}/%{name}',
             'mkdir -p %{buildroot}%{_datadir}/applications',
