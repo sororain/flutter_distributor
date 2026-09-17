@@ -1,0 +1,22 @@
+{
+  "name": "docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "deploy": "vitepress build && wrangler pages deploy .vitepress/dist --project-name fastforge-docs --commit-dirty=true",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@lunariajs/core": "^0.1.1",
+    "markdown-it-mathjax3": "^4.3.2",
+    "open-cli": "^8.0.0",
+    "postcss-rtlcss": "^5.7.1",
+    "prettier": "^3.8.4",
+    "vitepress": "2.0.0-alpha.17",
+    "vitepress-plugin-group-icons": "^1.7.5",
+    "wrangler": "^4.103.0"
+  }
+}

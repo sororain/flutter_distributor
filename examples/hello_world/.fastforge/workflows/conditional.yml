@@ -1,0 +1,66 @@
+# Workflow testing condition expressions and control flow
+# Tests: if conditions, success()/failure()/always(), env var interpolation
+name: Conditional Logic
+on:
+  workflow_dispatch:
+
+env:
+  SHOULD_DEPLOY: "true"
+  TARGET_BRANCH: main
+
+jobs:
+  setup:
+    name: Setup
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Print context
+        run: |
+          echo "Event: workflow_dispatch"
+          echo "Project ready for testing"
+        shell: bash
+
+  test:
+    name: Run Tests
+    needs: [setup]
+    steps:
+      - name: Run unit tests
+        run: echo "flutter test"
+        shell: bash
+      - name: This may fail (continue anyway)
+        if: failure()
+        run: echo "Previous step failed — running cleanup"
+        shell: bash
+      - name: Always runs
+        if: always()
+        run: echo "This step always runs regardless of previous results"
+        shell: bash
+
+  deploy-when-success:
+    name: Deploy (on success)
+    needs: [test]
+    if: success() && env.SHOULD_DEPLOY == 'true'
+    steps:
+      - name: Deploy
+        run: echo "Deploying to ${{ env.TARGET_BRANCH }}..."
+        shell: bash
+
+  deploy-on-failure:
+    name: Rollback (on failure)
+    needs: [test]
+    if: failure()
+    steps:
+      - name: Rollback
+        run: echo "Rolling back deployment..."
+        shell: bash
+
+  notify:
+    name: Notify
+    needs: [deploy-when-success, deploy-on-failure]
+    if: always()
+    steps:
+      - name: Send notification
+        run: |
+          echo "Build completed."
+          echo "Branch: ${{ env.TARGET_BRANCH }}"
+        shell: bash

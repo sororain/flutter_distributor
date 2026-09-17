@@ -1,0 +1,53 @@
+# Basic CI workflow
+# Tests: shell commands, environment variables, multiple steps, job dependencies
+name: CI
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  FLUTTER_VERSION: "3.29"
+  PROJECT_NAME: hello_world
+
+jobs:
+  lint:
+    name: Lint & Format Check
+    runs-on: ubuntu-latest
+    env:
+      DART_ANALYZE_LEVEL: strict
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Show environment
+        run: |
+          echo "Project: $PROJECT_NAME"
+          echo "Flutter: $FLUTTER_VERSION"
+          echo "Analysis: $DART_ANALYZE_LEVEL"
+        shell: bash
+      - name: Analyze Dart code
+        run: echo "dart analyze lib/" && echo "No issues found."
+        shell: bash
+      - name: Format check
+        run: echo "dart format --dry-run --set-exit-if-changed lib/" && echo "All formatted."
+        shell: bash
+
+  test:
+    name: Run Tests
+    needs: [lint]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: echo "flutter pub get"
+        shell: bash
+      - name: Run unit tests
+        run: echo "flutter test --coverage"
+        shell: bash
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ./coverage

@@ -1,0 +1,37 @@
+[package]
+name = "fastforge_cli"
+version = "0.7.0"
+edition.workspace = true
+authors.workspace = true
+description = "The ultimate all-in-one app packaging and distribution tool"
+license.workspace = true
+
+[[bin]]
+name = "fastforge"
+path = "src/main.rs"
+
+[dependencies]
+fastforge_core = { path = "../../crates/core" }
+fastforge_app_analyzer = { path = "../../crates/app_analyzer" }
+fastforge_app_builder = { path = "../../crates/app_builder" }
+fastforge_app_packager = { path = "../../crates/app_packager" }
+fastforge_app_publisher = { path = "../../crates/app_publisher" }
+fastforge_app_store_connect = { path = "../../crates/stores/app_store_connect" }
+fastforge_app_gallery_connect = { path = "../../crates/stores/app_gallery_connect" }
+fastforge_google_play_console = { path = "../../crates/stores/google_play_console" }
+anyhow = "1.0.100"
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+clap = { version = "4.5.48", features = ["derive"] }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.145"
+serde_yaml = "0.9.34"
+async-trait = "0.1"
+minact-core = { git = "https://github.com/fastforgedev/minact.git" }
+tokio = { version = "1.47.1", features = ["rt", "rt-multi-thread", "macros"] }
+log = "0.4.28"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+tempfile = "3"
+serial_test = "3"

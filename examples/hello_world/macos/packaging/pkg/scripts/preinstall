@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# 安装前脚本示例（备份旧版本配置）
+echo "preinstall: 备份旧版本配置..."
+exit 0

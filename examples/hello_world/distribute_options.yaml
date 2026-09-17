@@ -1,0 +1,57 @@
+output: dist/
+releases:
+  - name: dev-release
+    jobs:
+      - name: android-aab
+        variables:
+          # FLUTTER_ROOT: ~/fvm/versions/3.10.3
+        package:
+          platform: android
+          target: aab
+          build_args:
+            target-platform: android-arm,android-arm64
+      - name: android-apk
+        package:
+          platform: android
+          target: apk
+          build_args:
+            target-platform: android-arm,android-arm64
+          hooks:
+            pre: 'echo "[HOOK] prepackage: platform=$PLATFORM, build_output=$BUILD_OUTPUT_DIRECTORY"'
+            post: 'echo "[HOOK] postpackage: output=$OUTPUT_DIRECTORY, files=$BUILD_OUTPUT_FILES"'
+      - name: ios-ipa
+        package:
+          platform: ios
+          target: ipa
+          build_args:
+            export-method: ad-hoc
+      # - name: ohos-hap
+      #   package:
+      #     platform: ohos
+      #     target: hap
+      # - name: ohos-app
+      #   package:
+      #     platform: ohos
+      #     target: app
+      - name: linux-appimage
+        package:
+          platform: linux
+          target: appimage
+      - name: linux-deb
+        package:
+          platform: linux
+          target: deb
+      - name: linux-zip
+        package:
+          platform: linux
+          target: zip
+      - name: macos-dmg
+        package:
+          platform: macos
+          target: dmg
+          build_args:
+            dart-define-from-file: env.json
+      - name: macos-pkg
+        package:
+          platform: macos
+          target: pkg

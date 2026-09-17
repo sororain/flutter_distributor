@@ -1,0 +1,175 @@
+import 'dart:io';
+
+import 'package:flutter_app_packager/src/api/app_package_maker.dart';
+import 'package:path/path.dart' as p;
+
+class InnoSetupLocale {
+  const InnoSetupLocale({
+    required this.lang,
+    this.file,
+  });
+
+  factory InnoSetupLocale.from(dynamic value) {
+    if (value is String) {
+      return InnoSetupLocale(lang: value);
+    }
+    if (value is Map) {
+      return InnoSetupLocale(
+        lang: value['lang']?.toString() ?? 'en',
+        file: value['file']?.toString(),
+      );
+    }
+    return const InnoSetupLocale(lang: 'en');
+  }
+
+  final String lang;
+  final String? file;
+
+  Map<String, dynamic> toJson() => {
+    'lang': lang,
+    if (file != null) 'file': file,
+  };
+}
+
+class MakeExeConfig extends MakeConfig {
+  MakeExeConfig({
+    this.scriptTemplate,
+    required this.appId,
+    this.executableName,
+    this.displayName,
+    this.publisherName,
+    this.publisherUrl,
+    this.createDesktopIcon,
+    this.launchAtStartup,
+    this.installDirName,
+    this.setupIconFile,
+    this.privilegesRequired,
+    this.locales,
+    this.architecturesAllowed,
+    this.architecturesInstallIn64BitMode,
+  });
+
+  factory MakeExeConfig.fromJson(Map<String, dynamic> json) {
+    List<InnoSetupLocale>? locales;
+    if (json['locales'] is List) {
+      locales = (json['locales'] as List)
+          .map((e) => InnoSetupLocale.from(e))
+          .toList();
+    }
+    if (locales == null || locales.isEmpty) {
+      locales = [const InnoSetupLocale(lang: 'en')];
+    }
+
+    // use absolute path
+    String iconfile = '';
+    if (json['setup_icon_file'] != null) {
+      String currentDirectory = Directory.current.path;
+      iconfile = p.join(currentDirectory, json['setup_icon_file']);
+    }
+
+    MakeExeConfig makeExeConfig = MakeExeConfig(
+      scriptTemplate: json['script_template'],
+      appId: json['app_id'] ?? json['appId'],
+      executableName: json['executable_name'],
+      displayName: json['display_name'],
+      publisherName: json['publisher_name'] ?? json['appPublisher'],
+      publisherUrl: json['publisher_url'] ?? json['appPublisherUrl'],
+      createDesktopIcon: json['create_desktop_icon'],
+      launchAtStartup: json['launch_at_startup'],
+      installDirName: json['install_dir_name'],
+      setupIconFile: iconfile,
+      privilegesRequired: json['privileges_required'],
+      locales: locales,
+      architecturesAllowed: json['architectures_allowed'],
+      architecturesInstallIn64BitMode:
+          json['architectures_install_in_64bit_mode'],
+    );
+    return makeExeConfig;
+  }
+
+  String? scriptTemplate;
+  final String appId;
+  String? executableName;
+  String? displayName;
+  String? publisherName;
+  String? publisherUrl;
+  bool? createDesktopIcon;
+  bool? launchAtStartup;
+  String? installDirName;
+  String? setupIconFile;
+  String? privilegesRequired;
+  List<InnoSetupLocale>? locales;
+
+  /// Space-separated list of architecture identifiers (or a boolean expression)
+  /// specifying which architectures Setup is allowed to run on.
+  /// Defaults to `x64compatible`.
+  /// See: https://jrsoftware.org/ishelp/index.php?topic=setup_architecturesallowed
+  String? architecturesAllowed;
+
+  /// Space-separated list of architecture identifiers (or a boolean expression)
+  /// specifying which architectures should enable 64-bit install mode.
+  /// Defaults to `x64compatible`.
+  /// See: https://jrsoftware.org/ishelp/index.php?topic=setup_architecturesinstallin64bitmode
+  String? architecturesInstallIn64BitMode;
+
+  String get defaultExecutableName {
+    File executableFile = packagingDirectory
+        .listSync()
+        .where((e) => e.path.endsWith('.exe'))
+        .map((e) => File(e.path))
+        .first;
+    return p.basename(executableFile.path);
+  }
+
+  String get defaultInstallDirName => '{autopf64}\\$appName';
+
+  String get sourceDir => p.basename(packagingDirectory.path);
+
+  String get outputBaseFileName =>
+      p.basename(outputFile.path).replaceAll('.exe', '');
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'script_template': scriptTemplate,
+      'app_id': appId,
+      'arch': arch,
+      'app_name': appName,
+      'app_version': appVersion.toString(),
+      'executable_name': executableName,
+      'display_name': displayName,
+      'publisher_name': publisherName,
+      'publisher_url': publisherUrl,
+      'create_desktop_icon': createDesktopIcon,
+      'launch_at_startup': launchAtStartup,
+      'install_dir_name': installDirName,
+      'setup_icon_file': setupIconFile,
+      'privileges_required': privilegesRequired,
+      'locales': locales?.map((e) => e.toJson()).toList(),
+      'architectures_allowed': architecturesAllowed,
+      'architectures_install_in_64bit_mode': architecturesInstallIn64BitMode,
+    }..removeWhere((key, value) => value == null);
+  }
+}
+
+class MakeExeConfigLoader extends DefaultMakeConfigLoader {
+  @override
+  MakeConfig load(
+    Map<String, dynamic>? arguments,
+    Directory outputDirectory, {
+    required Directory buildOutputDirectory,
+    required List<File> buildOutputFiles,
+  }) {
+    final baseMakeConfig = super.load(
+      arguments,
+      outputDirectory,
+      buildOutputDirectory: buildOutputDirectory,
+      buildOutputFiles: buildOutputFiles,
+    );
+    final map = loadMakeConfigYaml(
+      '$platform/packaging/$packageFormat/make_config.yaml',
+    );
+    return MakeExeConfig.fromJson(map).copyWith(baseMakeConfig)
+      ..isInstaller = true;
+  }
+}

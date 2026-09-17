@@ -1,0 +1,116 @@
+# Dev release pipeline
+# Replaces the `releases` configuration from distribute_options.yaml
+name: Dev Release
+on:
+  workflow_dispatch:
+    inputs:
+      build_mode:
+        description: "Build mode"
+        required: true
+        default: "release"
+
+env:
+  OUTPUT_DIR: dist/
+
+jobs:
+  android-aab:
+    name: Android AAB
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Package Android AAB
+        uses: fastforge/package@v1
+        with:
+          platform: android
+          target: aab
+          output: ${{ env.OUTPUT_DIR }}
+          build-args: '{"target-platform":"android-arm,android-arm64"}'
+
+  android-apk:
+    name: Android APK
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Package Android APK
+        uses: fastforge/package@v1
+        with:
+          platform: android
+          target: apk
+          output: ${{ env.OUTPUT_DIR }}
+          hook-pre: 'echo "[HOOK] prepackage: platform=$PLATFORM, build_output=$BUILD_OUTPUT_DIRECTORY"'
+          hook-post: 'echo "[HOOK] postpackage: output=$OUTPUT_DIRECTORY, files=$BUILD_OUTPUT_FILES"'
+          build-args: '{"target-platform":"android-arm,android-arm64"}'
+
+  ios-ipa:
+    name: iOS IPA
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Package iOS IPA
+        uses: fastforge/package@v1
+        with:
+          platform: ios
+          target: ipa
+          output: ${{ env.OUTPUT_DIR }}
+          build-args: '{"export-method":"ad-hoc"}'
+
+  linux-appimage:
+    name: Linux AppImage
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Package Linux AppImage
+        uses: fastforge/package@v1
+        with:
+          platform: linux
+          target: appimage
+          output: ${{ env.OUTPUT_DIR }}
+
+  linux-deb:
+    name: Linux DEB
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Package Linux DEB
+        uses: fastforge/package@v1
+        with:
+          platform: linux
+          target: deb
+          output: ${{ env.OUTPUT_DIR }}
+
+  linux-zip:
+    name: Linux ZIP
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Package Linux ZIP
+        uses: fastforge/package@v1
+        with:
+          platform: linux
+          target: zip
+          output: ${{ env.OUTPUT_DIR }}
+
+  macos-dmg:
+    name: macOS DMG
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Package macOS DMG
+        uses: fastforge/package@v1
+        with:
+          platform: macos
+          target: dmg
+          output: ${{ env.OUTPUT_DIR }}
+          build-args: '{"dart-define-from-file":"env.json"}'
+
+  macos-pkg:
+    name: macOS PKG
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Package macOS PKG
+        uses: fastforge/package@v1
+        with:
+          platform: macos
+          target: pkg
+          output: ${{ env.OUTPUT_DIR }}

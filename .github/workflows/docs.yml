@@ -1,0 +1,27 @@
+name: Documentation
+
+on:
+  push:
+    branches: [main, dev]
+    paths:
+      - "docs/**"
+      - "README.md"
+      - "README-ZH.md"
+      - "scripts/check_docs.py"
+      - ".github/workflows/docs.yml"
+  pull_request:
+    branches: [main, dev]
+    paths:
+      - "docs/**"
+      - "README.md"
+      - "README-ZH.md"
+      - "scripts/check_docs.py"
+      - ".github/workflows/docs.yml"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check localized documentation
+        run: python3 scripts/check_docs.py

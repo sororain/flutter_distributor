@@ -1,0 +1,14 @@
+version: 1
+
+project:
+  name: hello_world
+  app_id: dev.fastforge.hello_world
+  description: Fastforge hello world example using the new .fastforge layout.
+
+output: dist/
+
+env:
+  APP_ENV: demo
+
+defaults:
+  artifact_name: "{{name}}-{{build_name}}.{{ext}}"

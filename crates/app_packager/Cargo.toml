@@ -1,0 +1,17 @@
+[package]
+name = "fastforge_app_packager"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description = "A unified app packager"
+license.workspace = true
+
+[dependencies]
+fastforge_core = { path = "../core" }
+dmg_maker = { path = "../dmg_maker" }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9.34"
+
+[dev-dependencies]
+tempfile = "3"

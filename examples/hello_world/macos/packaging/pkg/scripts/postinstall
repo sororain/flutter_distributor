@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# 安装后脚本示例（XPC Service 注册）
+echo "postinstall: 注册 XPC Service..."
+exit 0

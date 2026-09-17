@@ -1,0 +1,20 @@
+[workspace]
+resolver = "3"
+members = [
+  "crates/core",
+  "crates/app_analyzer",
+  "crates/app_builder",
+  "crates/app_packager",
+  "crates/app_publisher",
+  "crates/dmg_maker",
+  "crates/stores/app_store_connect",
+  "crates/stores/app_gallery_connect",
+  "crates/stores/google_play_console",
+  "apps/cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+authors = ["LiJianying <lijy91@foxmail.com>"]
+license = "MIT"

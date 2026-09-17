@@ -1,0 +1,12 @@
+{
+  "title": "Sample App",
+  "app": "assets/SampleApp.app",
+  "icon": "assets/SampleIcon.icns",
+  "background": "assets/SampleBackground.png",
+  "icons": {
+    "size": 80,
+    "app": [192, 344],
+    "alias": [448, 344]
+  },
+  "extra": [["assets/Readme.txt", 100, 100]]
+}
