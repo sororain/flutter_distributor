@@ -201,10 +201,7 @@ fn render_manifest(
             .iter()
             .map(|e| {
                 let ext = e.strip_prefix('.').unwrap_or(e);
-                format!(
-                    "              <uap:FileType>.{}</uap:FileType>",
-                    xml_escape(ext)
-                )
+                format!("              <uap:FileType>.{}</uap:FileType>", xml_escape(ext))
             })
             .collect::<Vec<_>>()
             .join("\n");
@@ -245,10 +242,7 @@ fn render_manifest(
     let extensions_block = if extensions.is_empty() {
         String::new()
     } else {
-        format!(
-            "\n      <Extensions>\n{}\n      </Extensions>",
-            extensions.join("\n")
-        )
+        format!("\n      <Extensions>\n{}\n      </Extensions>", extensions.join("\n"))
     };
 
     format!(
@@ -400,7 +394,11 @@ impl AppPackager for WindowsMsixPackager {
         if !is_false(&make_config.sign_msix) {
             if let Some(signtool_options) = &make_config.signtool_options {
                 let mut args: Vec<String> = vec!["sign".to_string()];
-                args.extend(signtool_options.split_whitespace().map(String::from));
+                args.extend(
+                    signtool_options
+                        .split_whitespace()
+                        .map(String::from),
+                );
                 args.push(output_file.display().to_string());
                 run(Command::new("signtool").args(&args))?;
             } else if let Some(cert) = &certificate_path {
@@ -469,10 +467,7 @@ mod tests {
             detect_architecture(Path::new("build/windows/x64/runner/Release")),
             "x64"
         );
-        assert_eq!(
-            detect_architecture(Path::new("build/windows/runner")),
-            "x64"
-        );
+        assert_eq!(detect_architecture(Path::new("build/windows/runner")), "x64");
     }
 
     #[test]

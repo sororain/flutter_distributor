@@ -186,21 +186,13 @@ impl S3PublishOptions {
         let access_key = required_value(
             config,
             &["access-key", "s3-access-key", "minio-access-key"],
-            &[
-                ENV_S3_ACCESS_KEY,
-                ENV_AWS_ACCESS_KEY_ID,
-                ENV_MINIO_ACCESS_KEY,
-            ],
+            &[ENV_S3_ACCESS_KEY, ENV_AWS_ACCESS_KEY_ID, ENV_MINIO_ACCESS_KEY],
             "S3 access key",
         )?;
         let secret_key = required_value(
             config,
             &["secret-key", "s3-secret-key", "minio-secret-key"],
-            &[
-                ENV_S3_SECRET_KEY,
-                ENV_AWS_SECRET_ACCESS_KEY,
-                ENV_MINIO_SECRET_KEY,
-            ],
+            &[ENV_S3_SECRET_KEY, ENV_AWS_SECRET_ACCESS_KEY, ENV_MINIO_SECRET_KEY],
             "S3 secret key",
         )?;
         let bucket = required_value(
@@ -211,12 +203,7 @@ impl S3PublishOptions {
         )?;
         let key_prefix = optional_value(
             config,
-            &[
-                "savekey-prefix",
-                "key-prefix",
-                "s3-key-prefix",
-                "minio-savekey-prefix",
-            ],
+            &["savekey-prefix", "key-prefix", "s3-key-prefix", "minio-savekey-prefix"],
             &[ENV_S3_KEY_PREFIX],
         );
         let public_base_url = optional_value(

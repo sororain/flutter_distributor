@@ -73,7 +73,10 @@ impl AppImageMakeConfig {
                     .clone()
                     .unwrap_or_else(|| "A Flutter Application".to_string()),
             ),
-            ("Exec", format!("LD_LIBRARY_PATH=usr/lib {} %u", app_name)),
+            (
+                "Exec",
+                format!("LD_LIBRARY_PATH=usr/lib {} %u", app_name),
+            ),
             ("Icon", app_name.clone()),
             ("Type", "Application".to_string()),
             (
@@ -81,7 +84,11 @@ impl AppImageMakeConfig {
                 self.startup_notify.unwrap_or(false).to_string(),
             ),
         ];
-        if let Some(mime) = self.supported_mime_type.as_ref().filter(|v| !v.is_empty()) {
+        if let Some(mime) = self
+            .supported_mime_type
+            .as_ref()
+            .filter(|v| !v.is_empty())
+        {
             fields.push(("MimeType", format!("{};", mime.join(";"))));
         }
         if !self.categories.is_empty() {

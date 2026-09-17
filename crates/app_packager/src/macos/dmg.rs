@@ -96,11 +96,7 @@ fn load_dmg_make_config(path: &Path) -> Result<Option<serde_json::Value>, Packag
     let yaml: serde_yaml::Value = serde_yaml::from_str(&content)
         .map_err(|e| PackageError::General(format!("Failed to parse {}: {}", path.display(), e)))?;
     let spec = serde_json::to_value(yaml).map_err(|e| {
-        PackageError::General(format!(
-            "Failed to convert {} to JSON: {}",
-            path.display(),
-            e
-        ))
+        PackageError::General(format!("Failed to convert {} to JSON: {}", path.display(), e))
     })?;
     Ok(Some(spec))
 }

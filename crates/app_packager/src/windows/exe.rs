@@ -270,7 +270,10 @@ impl IssVariables {
             ("OUTPUT_BASE_FILENAME", self.output_base_filename.clone()),
             ("SETUP_ICON_FILE", self.setup_icon_file.clone()),
             ("PRIVILEGES_REQUIRED", self.privileges_required.clone()),
-            ("ARCHITECTURES_ALLOWED", self.architectures_allowed.clone()),
+            (
+                "ARCHITECTURES_ALLOWED",
+                self.architectures_allowed.clone(),
+            ),
             (
                 "ARCHITECTURES_INSTALL_IN_64BIT_MODE",
                 self.architectures_install_in_64bit_mode.clone(),

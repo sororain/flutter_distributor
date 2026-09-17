@@ -70,10 +70,7 @@ impl DebMakeConfig {
         };
 
         let entries: Vec<(&str, Option<String>)> = vec![
-            (
-                "Maintainer",
-                self.maintainer.as_ref().map(Person::formatted),
-            ),
+            ("Maintainer", self.maintainer.as_ref().map(Person::formatted)),
             (
                 "Package",
                 Some(
@@ -256,7 +253,10 @@ impl AppPackager for LinuxDebPackager {
         copy_dir_contents(&config.build_output_dir, &share_app_dir)?;
 
         // DEBIAN/control
-        std::fs::write(debian_dir.join("control"), make_config.control_file(config))?;
+        std::fs::write(
+            debian_dir.join("control"),
+            make_config.control_file(config),
+        )?;
 
         // DEBIAN/postinst + DEBIAN/postrm
         let postinst_path = debian_dir.join("postinst");

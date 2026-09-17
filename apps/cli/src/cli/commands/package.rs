@@ -110,9 +110,7 @@ impl PackageArgs {
                         .or_insert(Value::String(value.to_string()));
                 }
                 None => {
-                    build_args
-                        .entry(arg.to_string())
-                        .or_insert(Value::Bool(true));
+                    build_args.entry(arg.to_string()).or_insert(Value::Bool(true));
                 }
             }
         }
@@ -285,13 +283,7 @@ pub fn package_flutter_artifact(
     }
     drop(packager);
 
-    let build = build_flutter_target(
-        &platform,
-        target,
-        build_args,
-        &environment,
-        clean_before_build,
-    )?;
+    let build = build_flutter_target(&platform, target, build_args, &environment, clean_before_build)?;
     package_flutter_build(
         &platform,
         target,
@@ -321,12 +313,7 @@ pub fn build_flutter_target(
             .map_err(|e| anyhow!("{}", e))?;
     }
     builder
-        .build(
-            platform,
-            Some(target),
-            build_args,
-            Some(environment.clone()),
-        )
+        .build(platform, Some(target), build_args, Some(environment.clone()))
         .map_err(|e| anyhow!("{}", e))
 }
 
@@ -1096,10 +1083,7 @@ mod tests {
         let matrix: &[(&str, &[&str])] = &[
             ("android", &["aab", "apk"]),
             ("ios", &["ipa"]),
-            (
-                "linux",
-                &["appimage", "deb", "pacman", "rpm", "zip", "direct"],
-            ),
+            ("linux", &["appimage", "deb", "pacman", "rpm", "zip", "direct"]),
             ("macos", &["dmg", "pkg", "zip"]),
             ("ohos", &["app", "hap"]),
             ("web", &["zip", "direct"]),
@@ -1139,10 +1123,7 @@ mod tests {
     fn only_exe_is_an_installer_target() {
         assert!(is_installer_target("exe"));
         for target in ["dmg", "pkg", "deb", "rpm", "pacman", "msix", "apk", "zip"] {
-            assert!(
-                !is_installer_target(target),
-                "{target} must not be an installer"
-            );
+            assert!(!is_installer_target(target), "{target} must not be an installer");
         }
     }
 }

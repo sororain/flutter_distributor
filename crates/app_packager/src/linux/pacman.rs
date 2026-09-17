@@ -133,7 +133,11 @@ impl PacmanMakeConfig {
             "post_install() {{\n\t{}\n}}",
             post_install.join("\n\t")
         )];
-        if let Some(upgrade) = self.postupgrade_scripts.as_ref().filter(|v| !v.is_empty()) {
+        if let Some(upgrade) = self
+            .postupgrade_scripts
+            .as_ref()
+            .filter(|v| !v.is_empty())
+        {
             sections.push(format!("post_upgrade() {{\n\t{}\n}}", upgrade.join("\n")));
         }
         sections.push(format!(
@@ -229,7 +233,10 @@ impl AppPackager for LinuxPacmanPackager {
         ]))?;
 
         // Write .PKGINFO, .INSTALL, .desktop
-        std::fs::write(pkg_dir.join(".PKGINFO"), make_config.pkginfo_file(config))?;
+        std::fs::write(
+            pkg_dir.join(".PKGINFO"),
+            make_config.pkginfo_file(config),
+        )?;
         std::fs::write(
             pkg_dir.join(".INSTALL"),
             make_config.install_file(binary_name),
